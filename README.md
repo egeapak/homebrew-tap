@@ -2,23 +2,26 @@
 
 Homebrew formulae for [egeapak](https://github.com/egeapak) projects.
 
-## Usage
+## Installation
 
 ```bash
 brew tap egeapak/tap
-brew install <formula>
 ```
 
-Or install directly:
+## Available Formulae
+
+| Formula | Description | Version |
+|---------|-------------|---------|
+| [mergers](https://github.com/egeapak/mergers) | CLI/TUI tool for streamlining Azure DevOps PR merging via cherry-picking | 1.0.0 |
+
+### mergers
 
 ```bash
-brew install egeapak/tap/<formula>
+brew install mergers
 ```
 
-## Adding a new formula
+Or install without tapping first:
 
-1. Copy `Formula/example.rb` and rename it to `Formula/<project>.rb`
-2. Update the class name, description, homepage, and URLs
-3. Generate checksums with `shasum -a 256 <file>` for each release asset
-4. Test locally with `brew install --build-from-source Formula/<project>.rb`
-5. Validate with `brew audit --strict Formula/<project>.rb`
+```bash
+brew install egeapak/tap/mergers
+```
