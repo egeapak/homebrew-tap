@@ -27,6 +27,12 @@ class Mergers < Formula
 
   def install
     bin.install "mergers"
+
+    # Ad-hoc re-sign to avoid macOS Gatekeeper blocking the binary
+    if OS.mac?
+      system "codesign", "--remove-signature", "#{bin}/mergers"
+      system "codesign", "--force", "--sign", "-", "#{bin}/mergers"
+    end
   end
 
   test do

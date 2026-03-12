@@ -8,7 +8,8 @@ class GitHubPrivateDownload < CurlDownloadStrategy
   def _fetch(url:, resolved_url:, timeout:)
     token = ENV["HOMEBREW_GITHUB_API_TOKEN"].to_s
     if token.empty?
-      token = `gh auth token 2>/dev/null`.strip
+      gh_path = which("gh") || "#{HOMEBREW_PREFIX}/bin/gh"
+      token = `#{gh_path} auth token 2>/dev/null`.strip if File.executable?(gh_path.to_s)
     end
 
     if token.empty?
@@ -59,6 +60,13 @@ cask "engramdb" do
   homepage "https://github.com/egeapak/engramdb"
 
   binary "engramdb"
+
+  postflight do
+    # Ad-hoc re-sign to avoid macOS Gatekeeper blocking the binary
+    binary_path = "#{staged_path}/engramdb"
+    system_command "codesign", args: ["--remove-signature", binary_path]
+    system_command "codesign", args: ["--force", "--sign", "-", binary_path]
+  end
 
   caveats <<~EOS
     To use EngramDB with Claude Code:
