@@ -4,6 +4,7 @@ class Mergers < Formula
   desc "CLI/TUI tool for Azure DevOps pull request merging via cherry-picking"
   homepage "https://github.com/egeapak/mergers"
   url "https://github.com/egeapak/mergers/archive/refs/tags/v1.0.0.tar.gz"
+  version "1.0.0"
   sha256 "c6bcb32abc4fb51ed5f49408f506f199df073d62509287f5163a0b5e78bc1106"
   license "MIT"
 
