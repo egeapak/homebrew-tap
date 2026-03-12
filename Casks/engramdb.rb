@@ -64,13 +64,14 @@ cask "engramdb" do
         using: GitHubPrivateDownload
 
     binary "engramdb"
+  end
 
-    postflight do
-      # Ad-hoc re-sign to avoid macOS Gatekeeper blocking the binary
-      binary_path = "#{staged_path}/engramdb"
-      system_command "codesign", args: ["--remove-signature", binary_path]
-      system_command "codesign", args: ["--force", "--sign", "-", binary_path]
-    end
+  postflight do
+    # Remove quarantine and ad-hoc re-sign to pass macOS Gatekeeper checks
+    system_command "/usr/bin/xattr", args: ["-dr", "com.apple.quarantine", staged_path]
+    binary_path = "#{staged_path}/engramdb"
+    system_command "codesign", args: ["--remove-signature", binary_path]
+    system_command "codesign", args: ["--force", "--sign", "-", binary_path]
   end
 
   name "EngramDB"
