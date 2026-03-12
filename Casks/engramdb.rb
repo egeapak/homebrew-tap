@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "download_strategy"
 
 # Resolves GitHub token from HOMEBREW_GITHUB_API_TOKEN or `gh auth token`.
@@ -24,12 +26,17 @@ class GitHubPrivateDownload < CurlDownloadStrategy
     # e.g. github.com/owner/repo/releases/download/v1.0/file.tar.gz
     #   -> api.github.com/repos/owner/repo/releases/tags/v1.0 -> asset ID
     if url =~ %r{github\.com/([^/]+)/([^/]+)/releases/download/([^/]+)/(.+)$}
-      owner, repo, tag, filename = $1, $2, $3, $4
+      owner = ::Regexp.last_match(1)
+      repo = ::Regexp.last_match(2)
+      tag = ::Regexp.last_match(3)
+      filename = ::Regexp.last_match(4)
       require "json"
       release_json = `curl -sf -H "Authorization: token #{token}" https://api.github.com/repos/#{owner}/#{repo}/releases/tags/#{tag}`
       release = JSON.parse(release_json)
       asset = release["assets"]&.find { |a| a["name"] == filename }
+
       raise CurlDownloadStrategyError, "Asset '#{filename}' not found in release #{tag}" unless asset
+
       api_url = "https://api.github.com/repos/#{owner}/#{repo}/releases/assets/#{asset["id"]}"
     else
       api_url = url
@@ -39,22 +46,21 @@ class GitHubPrivateDownload < CurlDownloadStrategy
       api_url,
       "--header", "Accept: application/octet-stream",
       "--header", "Authorization: token #{token}",
-      to: temporary_path,
-      timeout:,
+      to:      temporary_path,
+      timeout: timeout
     )
   end
 end
 
 cask "engramdb" do
-  version "0.3.0"
-
   arch arm: "aarch64", intel: "x86_64"
+
+  version "0.3.0"
   sha256 arm:   "428a711a71f15c41db35c4ecadb7ac1b61b1cb1e422bfed7b5195d6c6342b098",
          intel: "3ec234ade568e49cae5b6039aba87d7099e89fdc1ff4d4a8f8f2fe5bdf53ed4f"
 
   url "https://github.com/egeapak/engramdb/releases/download/v#{version}/engramdb-#{arch}-apple-darwin.tar.gz",
       using: GitHubPrivateDownload
-
   name "EngramDB"
   desc "Project-scoped persistent memory store for coding agents"
   homepage "https://github.com/egeapak/engramdb"
