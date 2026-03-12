@@ -53,26 +53,29 @@ class GitHubPrivateDownload < CurlDownloadStrategy
 end
 
 cask "engramdb" do
-  arch arm: "aarch64", intel: "x86_64"
+  on_macos do
+    arch arm: "aarch64", intel: "x86_64"
 
-  version "0.3.0"
-  sha256 arm:   "428a711a71f15c41db35c4ecadb7ac1b61b1cb1e422bfed7b5195d6c6342b098",
-         intel: "3ec234ade568e49cae5b6039aba87d7099e89fdc1ff4d4a8f8f2fe5bdf53ed4f"
+    version "0.3.0"
+    sha256 arm:   "428a711a71f15c41db35c4ecadb7ac1b61b1cb1e422bfed7b5195d6c6342b098",
+           intel: "3ec234ade568e49cae5b6039aba87d7099e89fdc1ff4d4a8f8f2fe5bdf53ed4f"
 
-  url "https://github.com/egeapak/engramdb/releases/download/v#{version}/engramdb-#{arch}-apple-darwin.tar.gz",
-      using: GitHubPrivateDownload
+    url "https://github.com/egeapak/engramdb/releases/download/v#{version}/engramdb-#{arch}-apple-darwin.tar.gz",
+        using: GitHubPrivateDownload
+
+    binary "engramdb"
+
+    postflight do
+      # Ad-hoc re-sign to avoid macOS Gatekeeper blocking the binary
+      binary_path = "#{staged_path}/engramdb"
+      system_command "codesign", args: ["--remove-signature", binary_path]
+      system_command "codesign", args: ["--force", "--sign", "-", binary_path]
+    end
+  end
+
   name "EngramDB"
   desc "Project-scoped persistent memory store for coding agents"
   homepage "https://github.com/egeapak/engramdb"
-
-  binary "engramdb"
-
-  postflight do
-    # Ad-hoc re-sign to avoid macOS Gatekeeper blocking the binary
-    binary_path = "#{staged_path}/engramdb"
-    system_command "codesign", args: ["--remove-signature", binary_path]
-    system_command "codesign", args: ["--force", "--sign", "-", binary_path]
-  end
 
   caveats <<~EOS
     To use EngramDB with Claude Code:
