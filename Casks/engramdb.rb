@@ -56,9 +56,9 @@ cask "engramdb" do
   on_macos do
     arch arm: "aarch64", intel: "x86_64"
 
-    version "0.3.0"
-    sha256 arm:   "428a711a71f15c41db35c4ecadb7ac1b61b1cb1e422bfed7b5195d6c6342b098",
-           intel: "3ec234ade568e49cae5b6039aba87d7099e89fdc1ff4d4a8f8f2fe5bdf53ed4f"
+    version "0.4.0"
+    sha256 arm:   "6a288389ee656e6c1f1167f68ba85f705b8c49de6e9bd7cf33e30d987040ffe2",
+           intel: "9ae43ab85cbd2a46ccbc6800722e5dd8259a8ccd76e470368ac076e71f3c2611"
 
     url "https://github.com/egeapak/engramdb/releases/download/v#{version}/engramdb-#{arch}-apple-darwin.tar.gz",
         using: GitHubPrivateDownload
@@ -81,10 +81,9 @@ cask "engramdb" do
   caveats <<~EOS
     To use EngramDB with Claude Code:
 
-    1. Install the Claude Code plugin (sets up MCP server + hooks automatically):
+    1. Set up global Claude Code integration (hooks, MCP, agent directives):
 
-       claude plugin marketplace add egeapak/engramdb
-       claude plugin install engramdb@engramdb
+       engramdb setup --global
 
     2. Initialize a memory store in your project:
 
@@ -93,8 +92,6 @@ cask "engramdb" do
     3. Verify the setup:
 
        engramdb doctor
-
-    For manual setup without the plugin, see the project README.
 
     Note: This cask downloads from a private GitHub repository.
     Authentication is resolved automatically via `gh auth login`.
