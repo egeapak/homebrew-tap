@@ -3,29 +3,29 @@
 class Mergers < Formula
   desc "CLI/TUI tool for Azure DevOps pull request merging via cherry-picking"
   homepage "https://github.com/egeapak/mergers"
-  url "https://github.com/egeapak/mergers/archive/refs/tags/v1.0.0.tar.gz"
-  version "1.0.0"
-  sha256 "c6bcb32abc4fb51ed5f49408f506f199df073d62509287f5163a0b5e78bc1106"
+  url "https://github.com/egeapak/mergers/archive/refs/tags/v1.1.0.tar.gz"
+  version "1.1.0"
+  sha256 "2ccf9d036aa3330b2437dae464a0a3e65cee4079b7faa8f7d326c9635ea1ab03"
   license "MIT"
 
   depends_on "git"
 
   on_macos do
     on_arm do
-      url "https://github.com/egeapak/mergers/releases/download/v1.0.0/mergers-aarch64-apple-darwin.tar.gz"
-      sha256 "c2e0a46cc5d44d310454de16a72fe18fc6467eab97cef77b177f03f4f9a513ab"
+      url "https://github.com/egeapak/mergers/releases/download/v1.1.0/mergers-aarch64-apple-darwin.tar.gz"
+      sha256 "22ebe50eb818e81904f8cad3219c0f78abe36d74e95c16de564efb028eb4a21c"
     end
 
     on_intel do
-      url "https://github.com/egeapak/mergers/releases/download/v1.0.0/mergers-x86_64-apple-darwin.tar.gz"
-      sha256 "b18935608cbd37a0c5cc68448076f47fa2849aeb37ea0ef06b262c039929da0b"
+      url "https://github.com/egeapak/mergers/releases/download/v1.1.0/mergers-x86_64-apple-darwin.tar.gz"
+      sha256 "d67e27d0b082bec49ccbe2b891bcfdd30f5d40f09e4791dc09cc0a13c8197493"
     end
   end
 
   on_linux do
     on_intel do
-      url "https://github.com/egeapak/mergers/releases/download/v1.0.0/mergers-x86_64-unknown-linux-gnu.tar.gz"
-      sha256 "8edbfb315f91f4b68fe2af11f58b4e00a4e2f45f9c9a820e4f4d865e94cee937"
+      url "https://github.com/egeapak/mergers/releases/download/v1.1.0/mergers-x86_64-unknown-linux-gnu.tar.gz"
+      sha256 "bef4e5be674a37eedcaf94dfcb4ed4f4f971e1201ce5ce300ce1410b7c5e6616"
     end
   end
 
