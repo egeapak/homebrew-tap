@@ -1,56 +1,6 @@
 # frozen_string_literal: true
 
-require "download_strategy"
-
-# Resolves GitHub token from HOMEBREW_GITHUB_API_TOKEN or `gh auth token`.
-# Downloads release assets from private GitHub repos.
-# Converts the human-readable release URL into an API asset URL and
-# authenticates with HOMEBREW_GITHUB_API_TOKEN or `gh auth token`.
-class GitHubPrivateDownload < CurlDownloadStrategy
-  def _fetch(url:, resolved_url:, timeout:)
-    token = ENV["HOMEBREW_GITHUB_API_TOKEN"].to_s
-    if token.empty?
-      gh_path = which("gh") || "#{HOMEBREW_PREFIX}/bin/gh"
-      token = `#{gh_path} auth token 2>/dev/null`.strip if File.executable?(gh_path.to_s)
-    end
-
-    if token.empty?
-      raise CurlDownloadStrategyError, <<~EOS
-        No GitHub credentials found for private repo download.
-        Authenticate with: gh auth login
-        Or set: export HOMEBREW_GITHUB_API_TOKEN=<your-token>
-      EOS
-    end
-
-    # Convert release download URL to API asset URL.
-    # e.g. github.com/owner/repo/releases/download/v1.0/file.tar.gz
-    #   -> api.github.com/repos/owner/repo/releases/tags/v1.0 -> asset ID
-    if url =~ %r{github\.com/([^/]+)/([^/]+)/releases/download/([^/]+)/(.+)$}
-      owner = ::Regexp.last_match(1)
-      repo = ::Regexp.last_match(2)
-      tag = ::Regexp.last_match(3)
-      filename = ::Regexp.last_match(4)
-      require "json"
-      release_json = `curl -sf -H "Authorization: token #{token}" https://api.github.com/repos/#{owner}/#{repo}/releases/tags/#{tag}`
-      release = JSON.parse(release_json)
-      asset = release["assets"]&.find { |a| a["name"] == filename }
-
-      raise CurlDownloadStrategyError, "Asset '#{filename}' not found in release #{tag}" unless asset
-
-      api_url = "https://api.github.com/repos/#{owner}/#{repo}/releases/assets/#{asset["id"]}"
-    else
-      api_url = url
-    end
-
-    curl_download(
-      api_url,
-      "--header", "Accept: application/octet-stream",
-      "--header", "Authorization: token #{token}",
-      to:      temporary_path,
-      timeout: timeout
-    )
-  end
-end
+require_relative "../lib/github_private_download"
 
 cask "engramdb" do
   on_macos do
