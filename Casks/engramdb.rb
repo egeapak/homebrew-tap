@@ -6,9 +6,9 @@ cask "engramdb" do
   on_macos do
     arch arm: "aarch64", intel: "x86_64"
 
-    version "0.7.0"
-    sha256 arm:   "45dfc3069eda7ec840b0d08939ad0750bf9dd9b4722cc6b327261893775bb8e7",
-           intel: "e50a1e91e96fa37d040b44175ac0e8f459b8139e008136b08cd430d939880375"
+    version "0.8.0"
+    sha256 arm:   "eedf77d6b6e77bcb70dbb0b8009bf2e6f1baa866df6e9e404bc08fbe41d26de1",
+           intel: "a9975f6cfd7fe7fcde73275d7f9daafc30d3c24ca7944c983ad6effd6d49f43e"
 
     url "https://github.com/egeapak/engramdb/releases/download/v#{version}/engramdb-#{arch}-apple-darwin.tar.gz",
         using: GitHubPrivateDownload
