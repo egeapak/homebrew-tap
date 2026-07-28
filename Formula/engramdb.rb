@@ -80,6 +80,11 @@ class Engramdb < Formula
     # `doctor` reports the ONNX Runtime it resolved. Proving the dependency is
     # actually wired up is the one thing worth testing here: a formula that
     # silently produced a keyword-only build would otherwise look healthy.
-    assert_match "ONNX Runtime", shell_output("#{bin}/engramdb doctor 2>&1")
+    #
+    # `--global` is required: plain `doctor` runs against the current project,
+    # and in the sandboxed test directory there is no store, so it reports only
+    # "Store initialized: not found" and exits 1 without ever reaching the
+    # runtime check. The global store needs no `init`.
+    assert_match "ONNX Runtime", shell_output("#{bin}/engramdb doctor --global 2>&1")
   end
 end
