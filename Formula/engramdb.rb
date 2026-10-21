@@ -3,7 +3,9 @@
 class Engramdb < Formula
   desc "Project-scoped persistent memory store for coding agents"
   homepage "https://github.com/egeapak/engramdb"
-  version "0.9.0"
+  # Linux x86_64 is the default; macOS overrides it below.
+  url "https://github.com/egeapak/engramdb/releases/download/v0.9.0/engramdb-x86_64-unknown-linux-gnu.tar.gz"
+  sha256 "28b6d89fdf534df1bfbfecdc2249443f57d7ab9d09381b5f47758f25a8c02778"
   license "MIT"
 
   # EngramDB ships no ONNX Runtime of its own. The prebuilt that `ort`'s
@@ -26,21 +28,19 @@ class Engramdb < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/egeapak/engramdb/releases/download/v#{version}/engramdb-aarch64-apple-darwin.tar.gz"
+      url "https://github.com/egeapak/engramdb/releases/download/v0.9.0/engramdb-aarch64-apple-darwin.tar.gz"
       sha256 "0a254a0ac4fec3f1deb9cdd297f48608e449ed43266704d14c8f1d9f203fd654"
     end
 
     on_intel do
-      url "https://github.com/egeapak/engramdb/releases/download/v#{version}/engramdb-x86_64-apple-darwin.tar.gz"
+      url "https://github.com/egeapak/engramdb/releases/download/v0.9.0/engramdb-x86_64-apple-darwin.tar.gz"
       sha256 "98b327187470fbd0d4b6c0c99085f57b117fbc3095cb60cd352242c47b85a4b1"
     end
   end
 
+  # No arm64 Linux build: refuse to install there instead of having no URL.
   on_linux do
-    on_intel do
-      url "https://github.com/egeapak/engramdb/releases/download/v#{version}/engramdb-x86_64-unknown-linux-gnu.tar.gz"
-      sha256 "28b6d89fdf534df1bfbfecdc2249443f57d7ab9d09381b5f47758f25a8c02778"
-    end
+    depends_on arch: :x86_64
   end
 
   def install

@@ -14,13 +14,17 @@ module CloveRelease
   }.freeze
 
   def clove_release
+    # Linux x86_64 is the default; macOS overrides it below.
+    clove_archive "linux-x86_64"
+
     on_macos do
       on_arm { clove_archive "macos-aarch64" }
       on_intel { clove_archive "macos-x86_64" }
     end
 
+    # No arm64 Linux build: refuse to install there instead of having no URL.
     on_linux do
-      on_intel { clove_archive "linux-x86_64" }
+      depends_on arch: :x86_64
     end
   end
 
