@@ -5,7 +5,10 @@ require_relative "../lib/github_private_download"
 class Mergers < Formula
   desc "CLI/TUI tool for Azure DevOps pull request merging via cherry-picking"
   homepage "https://github.com/egeapak/mergers"
-  version "1.2.0"
+  # Linux x86_64 is the default; macOS overrides it below.
+  url "https://github.com/egeapak/mergers/releases/download/v1.2.0/mergers-x86_64-unknown-linux-gnu.tar.gz",
+      using: GitHubPrivateDownload
+  sha256 "8baea54ac075dcd6c1ad0476c9de868812547846a4e7804bcae9e51cea3d2db1"
   license "MIT"
 
   depends_on "git"
@@ -24,12 +27,9 @@ class Mergers < Formula
     end
   end
 
+  # No arm64 Linux build: refuse to install there instead of having no URL.
   on_linux do
-    on_intel do
-      url "https://github.com/egeapak/mergers/releases/download/v1.2.0/mergers-x86_64-unknown-linux-gnu.tar.gz",
-          using: GitHubPrivateDownload
-      sha256 "8baea54ac075dcd6c1ad0476c9de868812547846a4e7804bcae9e51cea3d2db1"
-    end
+    depends_on arch: :x86_64
   end
 
   def install
