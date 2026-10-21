@@ -11,6 +11,8 @@ class Clove < Formula
 
   clove_release
 
+  uses_from_macos "zlib" # cloved links libz.so.1 on Linux
+
   def install
     CloveRelease.install(self, %w[clove cloved])
   end
