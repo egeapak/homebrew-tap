@@ -1,10 +1,19 @@
 name: brew test-bot
 
+# Only formula sources affect what test-bot checks; a README-only change skips it.
 on:
   push:
     branches:
       - master
+    paths:
+      - 'Formula/**'
+      - 'lib/**'
+      - '.github/workflows/tests.yml'
   pull_request:
+    paths:
+      - 'Formula/**'
+      - 'lib/**'
+      - '.github/workflows/tests.yml'
 
 permissions: {}
 
