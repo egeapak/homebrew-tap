@@ -13,8 +13,16 @@ class Clove < Formula
 
   uses_from_macos "zlib" # cloved links libz.so.1 on Linux
 
+  on_linux do
+    depends_on "patchelf" => :build
+  end
+
   def install
     CloveRelease.install(self, %w[clove cloved])
+
+    # The prebuilt cloved has no RPATH, so it would load the system libz instead
+    # of the zlib dependency; Homebrew only relocates RPATHs that already exist.
+    system "patchelf", "--set-rpath", formula_opt_lib("zlib"), bin/"cloved" if OS.linux?
   end
 
   def caveats
